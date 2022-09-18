@@ -1,0 +1,8 @@
+{
+    "extends": ["config:base"],
+    "labels": ["build :handshake:"],
+    "commitMessagePrefix": "⬆️",
+    "prHourlyLimit": 0,
+    "stabilityDays": 3,
+    "prCreation": "not-pending"
+}

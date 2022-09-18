@@ -7,6 +7,8 @@ const CustomDocument = () => {
             <Head>
                 <meta name="robots" content="follow, index" />
                 <meta property="og:type" content="website" />
+
+                <link rel="manifest" href="/site.webmanifest" />
             </Head>
             <body>
                 <Main />
