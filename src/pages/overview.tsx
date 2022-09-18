@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import { Button, Center } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { array } from 'typescript-json-decoder';
+import { watchDecoder } from '@customTypes/watch';
 import type { Watch } from '@customTypes/watch';
 
 const Overview = () => {
@@ -11,9 +14,13 @@ const Overview = () => {
 
     useEffect(() => {
         const fetchWatches = async () => {
-            const response = await fetch('/api/watches');
-            const data = await response.json();
-            setWatches(data);
+            try {
+                const { data } = await axios.get('/api/watches');
+                setWatches(array(watchDecoder)(data));
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(error);
+            }
         };
 
         void fetchWatches();
