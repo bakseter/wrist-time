@@ -1,8 +1,9 @@
-import { Center, Heading, Spinner, SimpleGrid, GridItem, HStack, Button, VStack } from '@chakra-ui/react';
+import { Center, Heading, SimpleGrid, GridItem, HStack, Button, VStack } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { array } from 'typescript-json-decoder';
+import LoadingSpinner from '@components/loading-spinner';
 import WatchCard from '@components/watch-card';
 import type { Watch, InsertableWatch, UnfinishedWatch } from '@customTypes/watch';
 import { watchDecoder } from '@customTypes/watch';
@@ -68,14 +69,7 @@ const Home = () => {
                         See overview
                     </Button>
                 </HStack>
-                {!watches && (
-                    <>
-                        <Heading px="1.3rem" size="lg">
-                            Loading watches...
-                        </Heading>
-                        <Spinner size="xl" />
-                    </>
-                )}
+                {!watches && <LoadingSpinner>Loading watches...</LoadingSpinner>}
                 {watches && (
                     <>
                         {watches.length === 0 && <Heading size="md">No watches found</Heading>}

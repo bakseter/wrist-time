@@ -1,9 +1,9 @@
 import type { decodeType } from 'typescript-json-decoder';
-import { record, nil, date, string, number, union } from 'typescript-json-decoder';
+import { record, nil, string, number, union } from 'typescript-json-decoder';
 
 const watchDecoder = record({
     id: number,
-    createdAt: date,
+    createdAt: string,
     name: string,
     wristTime: number,
     imageUrl: string,
@@ -25,7 +25,7 @@ type InsertableWatch = decodeType<typeof insertableWatchDecoder>;
 const dbWatchDecoder = record({
     id: number,
     /* eslint-disable camelcase */
-    created_at: date,
+    created_at: string,
     name: string,
     wrist_time: number,
     image_url: string,

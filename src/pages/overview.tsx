@@ -1,51 +1,54 @@
-import { useEffect, useState } from 'react';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
-import { Button, Center } from '@chakra-ui/react';
+import { Button, Center, Heading } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
-import { array } from 'typescript-json-decoder';
-import { watchDecoder } from '@customTypes/watch';
-import type { Watch } from '@customTypes/watch';
+import { getAllWatches } from '@schema/watch';
 
-const Overview = () => {
-    const [watches, setWatches] = useState<Array<Watch>>([]);
+interface WatchGraphData {
+    name: string;
+    'Wrist time': number;
+}
 
+interface Props {
+    watchesGraphData: Array<WatchGraphData> | null;
+}
+
+const Overview = ({ watchesGraphData }: Props) => {
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchWatches = async () => {
-            try {
-                const { data } = await axios.get('/api/watches');
-                setWatches(array(watchDecoder)(data));
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(error);
-            }
-        };
-
-        void fetchWatches();
-    }, []);
-
-    const data = watches.map((watch) => {
-        return { name: watch.name, 'Wrist time': watch.wristTime };
-    });
 
     return (
         <>
-            <Button mt="4rem" ml="4rem" onClick={() => void router.push('/')}>
+            <Button colorScheme="teal" mt="4rem" ml="4rem" onClick={() => void router.push('/')}>
                 Home
             </Button>
             <Center p="4rem">
-                <BarChart width={730} height={500} data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="Wrist time" fill="#8884d8" />
-                </BarChart>
+                {!watchesGraphData && <Heading size="lg">Unexpected error.</Heading>}
+                {watchesGraphData && (
+                    <BarChart width={730} height={500} data={watchesGraphData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis tickCount={1} />
+                        <Tooltip />
+                        <Bar dataKey="Wrist time" fill="#8884d8" />
+                    </BarChart>
+                )}
             </Center>
         </>
     );
+};
+
+export const getServerSideProps = async () => {
+    try {
+        const watches = await getAllWatches();
+        const watchesGraphData = watches.map((watch) => ({ name: watch.name, 'Wrist time': watch.wristTime }));
+
+        const props: Props = { watchesGraphData };
+
+        return { props };
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return { props: { watches: null } };
+    }
 };
 
 export default Overview;
