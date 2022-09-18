@@ -1,5 +1,5 @@
 import { array } from 'typescript-json-decoder';
-import supabase from '@utils/supabaseClient';
+import supabase from '@utils/supabase-client';
 import { watchDecoder, dbWatchDecoder } from '@customTypes/watch';
 import type { DbWatch, Watch, InsertableWatch } from '@customTypes/watch';
 

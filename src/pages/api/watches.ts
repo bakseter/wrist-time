@@ -47,7 +47,7 @@ const endpoint = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (req.method === 'DELETE') {
         try {
-            const id = string(req.query.id);
+            const id = Number.parseInt(string(req.query.id));
             const data = await deleteWatch(id);
             res.status(200).json(data);
             return;
